@@ -9,6 +9,8 @@ jobs:
   build:
     name: Build Project
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       # Remember we have to check out the repository first!
       - name: Checkout repository
@@ -20,6 +22,13 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Generate version
+        id: version
+        run: echo "version=1.2.3" >> $GITHUB_OUTPUT
+
+      - name: Use version in same job
+        run: echo "Version is ${{ steps.version.outputs.version }}"
 
   test:
     name: Test Project
@@ -35,3 +44,10 @@ jobs:
         
       - name: Build
         run: npm test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy version
+        run: echo "Deploying version ${{ needs.build.outputs.version }}"
