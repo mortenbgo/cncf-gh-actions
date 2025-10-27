@@ -23,8 +23,16 @@ jobs:
         with:
           node-version: 20
           #cache: "npm"
-      - run: npm install
-      - run: npm run build
+
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+
+      - name: Test app
+        run: |
+          npm install
+          npm test
 
       # Only upload artifact on main branch
       - name: Upload artifact
